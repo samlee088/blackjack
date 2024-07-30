@@ -84,4 +84,26 @@ class Player:
     def makeMove(self):
         pass
 
+
+class UserPlayer(Player):
+    def __init__(self, balance, hand):
+        super().__init__(hand)
+        self.balance = balance
+
+    def getBalance(self):
+        return self.balance
     
+    def placeBet(self, amount):
+        if amount > self.balance:
+            raise ValueError("Insufficient Funds")
+        self.balance -= amount
+        return amount
+    
+    def receiveWinnings(self, amount):
+        self.balance += amount
+
+    def makeMove(self):
+        if self.getHand().getScore()>21:
+            return False
+        move = input("Draw card? [y/n]")
+        return move == 'y'
