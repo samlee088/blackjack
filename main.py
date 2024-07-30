@@ -107,3 +107,15 @@ class UserPlayer(Player):
             return False
         move = input("Draw card? [y/n]")
         return move == 'y'
+    
+class Dealer(Player):
+    def __init__(self, hand):
+        super().__init__(hand)
+        self.targetScore = 17
+
+    def updateTargetScore(self, score):
+        self.targetScore = score
+    
+    def makeMove(self):
+        return self.getHand().getScore() < self.targetScore
+
