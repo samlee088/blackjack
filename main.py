@@ -119,3 +119,70 @@ class Dealer(Player):
     def makeMove(self):
         return self.getHand().getScore() < self.targetScore
 
+class GameRound:
+    def __init__(self, player, dealer, deck):
+        self.player = player
+        self.dealer = dealer
+        self.deck = deck
+    
+    def getBetUser(self):
+        amount = int(input("Enter a bet amount: "))
+        return amount
+    
+    def dealInitialCards(self):
+        for i in range(2):
+            self.player.addCard(self.deck.draw())
+            self.player.addCard(self.deck.draw())
+        print('Player hand: ')
+        self._player.getHand().print()
+        dealerCard = self._dealer.getHand().getCards()[0]
+        print("Dealer's first card: ")
+        dealerCard.print()
+    
+    def cleanupRound(self):
+        self.player.clearHand()
+        self.dealer.clearHand()
+        print("Player balance: ", self.player.getBalance())
+
+    def play(self):
+        self.deck.shuffle()
+
+        if self.player.getBalance() <= 0:
+            print('Player has no more money =)')
+            return
+        userBet = self.getBetUser()
+        self.player.placeBet(userBet)
+
+        self.dealInitialCards()
+
+        # User makes moves
+        while self.player.makeMove():
+            drawnCard = self.deck.draw()
+            print('Player draws', drawnCard.getSuit(), drawnCard.getValue())
+            self.player.addCard(drawnCard)
+            print('Player score: ', self.player.getHand().getScore())
+
+        if self.player.getHand().getScore() > 21:
+            print("Player busts!")
+            self.cleanupRound()
+            return
+        
+        # Dealer makes moves
+        while self.dealer.makeMove():
+            self.dealer.addCard(self.deck.draw())
+
+        # Determine winner
+        if self.dealer.getHand().getScore() > 21 or self.player.getHand().getScore() > self.dealer.getHand().getScore():
+            print('Player Wins!')
+            self.player.receiveWinnings(userBet * 2)
+        elif self.dealer.getHand().getScore() > self.player.getHand().getScore():
+            print('Player loses')
+        else:
+            print("Game ends in a draw")
+            self.player.receiveWinnings(userBet)
+        self.cleanupRound()
+
+player = UserPlayer(10000, Hand())
+dealer = Dealer(Hand())
+while player.getBalance > 0:
+    gameRound = GameRound(player, dealer, Deck()).play()
