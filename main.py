@@ -1,4 +1,6 @@
 from enum import Enum
+import random
+
 
 class Suit(Enum):
     CLUBS, DIAMONDS, HEARTS, SPADES = 'clubs', 'diamonds', 'hearts', 'spades'
@@ -39,3 +41,26 @@ class Hand():
     def print(self):
         for card in self.getCards():
             print(card.getSuit(), card.getValue())
+
+
+print, draw, shuffle
+
+class Deck:
+    
+    def __init__(self):
+        self.deck = []
+        for suit in Suit:
+            for value in range(1, 14):
+                self.cards.append(Card(suit, min(value, 10)))
+
+    def print(self):
+        for card in self.cards:
+            card.print()
+    
+    def draw(self):
+        return self.cards.pop()
+    
+    def shuffle(self):
+        for i in range(len(self.cards)):
+            j = random.randint(0, 51)
+            self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
