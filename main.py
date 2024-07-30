@@ -1,5 +1,6 @@
 from enum import Enum
 import random
+from abc import ABC, abstractmethod
 
 
 class Suit(Enum):
@@ -64,3 +65,23 @@ class Deck:
         for i in range(len(self.cards)):
             j = random.randint(0, 51)
             self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+
+
+class Player:
+    def __init__(self, hand):
+        self.hand = hand
+
+    def getHand(self):
+        return self.hand
+    
+    def clearHand(self):
+        self.hand = Hand()
+
+    def addCard(self, card):
+        self.hand.addCard(card)
+
+    @abstractmethod
+    def makeMove(self):
+        pass
+
+    
